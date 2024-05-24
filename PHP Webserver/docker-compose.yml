@@ -1,0 +1,48 @@
+services:
+  web_php74:
+    build: ./web_php74
+    container_name: web_php74
+    ports:
+      - "8080:80"
+    volumes:
+      - ./web_php74/html:/var/www/html
+    networks:
+      - app-network
+
+  web_php82:
+    build: ./web_php82
+    container_name: web_php82
+    ports:
+      - "8082:80"
+    volumes:
+      - ./web_php82/html:/var/www/html
+    networks:
+      - app-network
+
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user_password
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root_password
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
